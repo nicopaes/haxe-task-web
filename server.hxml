@@ -1,0 +1,17 @@
+-cp src/server-folder
+-cp src/shared
+
+-js build/serverbuild/server.js
+
+-lib hxnodejs
+-lib tink_web
+-lib haxelow
+-lib tjson
+
+-lib haxeui-core
+-lib haxeui-html5
+
+-D no-deprecation-warnings
+
+-main Server
+##-cmd node build/serverbuild/server.js

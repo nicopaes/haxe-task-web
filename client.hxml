@@ -1,0 +1,14 @@
+-main Client
+
+-cp src/frontend
+-cp src/shared
+
+-lib tink_web
+-lib haxeui-core
+-lib haxeui-html5
+-lib hscript
+-lib tjson
+
+-D no-deprecation-warnings
+
+-js build/clientbuild/client.js
