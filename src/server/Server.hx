@@ -12,6 +12,7 @@ class Server {
 	static function main() {
 		//var port = Node.process.env.get("PORT");
 		//trace(port);
+		//process.env.PORT || 
 		var container = new NodeContainer(8080);
 		var router = new Router<Root>(new Root());
 		container.run(function(req) {
@@ -91,8 +92,9 @@ class Root {
 	@:get('/projects/get')
 	public function GetAllProjects() {
 		trace("All projects were required");
-		//var body = TJSON.encode(this.m_allCurrentTasks);
-		var body = Json.stringify(this.m_allProjects);
+		//var body = TJSON.encode(m_allProjects,'fancy');
+		//var body = Json.stringify(m_db.backup());
+		var body = m_db.backup();
 		
 		var head = new ResponseHeader(200, 'Found', '');
 		var res = new Response(head, body);
