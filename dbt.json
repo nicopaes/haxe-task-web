@@ -1,19 +1,25 @@
 {
-     "Task" : [
+     "Project" : [
          {
-             "_hxcls" : "Task"
-            ,"name" : "This mf task"
-            ,"id" : "9c50a7fd-38c6-4dda-ada8-c2b46eff006f"
-        }
-        ,{
-             "_hxcls" : "Task"
-            ,"name" : "This mf task 2 "
-            ,"id" : "9c50a7fe-e2b4-4797-a873-a36d101f385c"
-        }
-        ,{
-             "_hxcls" : "Task"
-            ,"name" : "This mf task 3 "
-            ,"id" : "9c50a7fe-5d3b-4759-9d3b-22ff8e1a8a06"
+             "_hxcls" : "Project"
+            ,"name" : "Reigns"
+            ,"id" : "3fd98ce3-3ce4-4136-84fc-de4caf27179d"
+            ,"totalSumSeconds" : 0
+            ,"timeOfCreation" : "2021-05-06 01:04:52"
+            ,"associatedTasks" : [
+                 {
+                     "_hxcls" : "Task"
+                    ,"name" : "This mf task"
+                    ,"id" : "3fd98ce4-beb5-4085-b273-d101fee81d96"
+                    ,"totalDuration" : 0
+                    ,"setStarts" : [
+
+                    ]
+                    ,"setStops" : [
+
+                    ]
+                }
+            ]
         }
     ]
 }

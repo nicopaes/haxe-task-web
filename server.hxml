@@ -1,7 +1,7 @@
--cp src/server-folder
+-cp src/server
 -cp src/shared
 
--js build/serverbuild/server.js
+-js server.js
 
 -lib hxnodejs
 -lib tink_web
