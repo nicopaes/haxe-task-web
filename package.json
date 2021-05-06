@@ -1,0 +1,32 @@
+{
+  "name": "haxe-task-web",
+  "version": "1.0.0",
+  "description": "Simple webserver that manages tasks",
+  "main": "server.js",
+  "dependencies": {
+    "graceful-fs": "^4.2.6",
+    "steno": "^0.5.0",
+    "lowdb": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicopaes/haxe-task-web.git"
+  },
+  "keywords": [
+    "server",
+    "haxe",
+    "tasks",
+    "projects"
+  ],
+  "author": "Nicolas Paes leme",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nicopaes/haxe-task-web/issues"
+  },
+  "homepage": "https://github.com/nicopaes/haxe-task-web#readme"
+}
