@@ -625,7 +625,7 @@ var Server = function() { };
 $hxClasses["Server"] = Server;
 Server.__name__ = "Server";
 Server.main = function() {
-	var container = new tink_http_containers_NodeContainer(tink_http_containers__$NodeContainer_ServerKindBase.Port(8080));
+	var container = new tink_http_containers_NodeContainer(tink_http_containers__$NodeContainer_ServerKindBase.Port(process.env.PORT || 5000));
 	var router = new tink_web_routing_Router0(new Root());
 	container.run(new tink_http_SimpleHandler(function(req) {
 		var this1 = router.route(tink_web_routing_Context.ofRequest(req));
