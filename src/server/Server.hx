@@ -10,6 +10,8 @@ import tjson.TJSON;
 
 class Server {
 	static function main() {
+		//var port = Node.process.env.get("PORT");
+		//trace(port);
 		var container = new NodeContainer(8080);
 		var router = new Router<Root>(new Root());
 		container.run(function(req) {
@@ -26,19 +28,19 @@ class Root {
 		//this.m_allCurrentTasks = this.m_db.col(Task);
 		this.m_allProjects = this.m_db.col(Project);
 
-		var p = new Project("Reigns",HaxeLow.uuid());
+		// var p = new Project("Reigns",HaxeLow.uuid());
 
-		var t = new Task('This mf task',HaxeLow.uuid());
+		// var t = new Task('This mf task',HaxeLow.uuid());
 
-		trace(p.name);
-		trace(t.name);
+		// trace(p.name);
+		// trace(t.name);
 
-		p.addTask(t);
+		// //p.addTask(t);
 
-		trace(p.associatedTasks.length);
-		trace(p.timeOfCreation);
+		// trace(p.associatedTasks.length);
+		// trace(p.timeOfCreation);
 
-		m_allProjects.push(p);
+		//m_allProjects.push(p);
 		trace(m_allProjects[0].name);
 		trace(m_allProjects[0].associatedTasks.length);
 
