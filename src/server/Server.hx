@@ -133,10 +133,10 @@ class Root {
 		if (_project != null) {
 			trace(_project.name);
 			if (_project.StopTask(taskid)) {
-				trace("Sucess start task");
+				trace("Sucess stop task");
 				this.m_db.save();
 			} else {
-				trace("FAIL start task");
+				trace("FAIL stop task");
 			}
 		}
 
