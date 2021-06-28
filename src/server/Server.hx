@@ -60,47 +60,24 @@ class Root {
 	public var m_allCurrentTasks:Array<Task>;
 	public var m_allProjects:Array<Project>;
 
-	// @:get('/tasks/get')
-	// public function GetAllTasks() {
-	// 	// trace("All tasks were required");
-	// 	//var body = TJSON.encode(this.m_allCurrentTasks);
-	// 	var body = Json.stringify(this.m_allCurrentTasks);
-	// 	var head = new ResponseHeader(200, 'Found', '');
-	// 	var res = new Response(head, body);
-	// 	trace(res.header);
-	// 	trace(res.body);
-	// 	return res;
-	// }
-	// @:options('/tasks/get')
-	// public function OptionsAllTasks() {
-	// 	var headerFields:Array<HeaderField> = new Array<HeaderField>();
-	// 	headerFields.push(new HeaderField('Access-Control-Allow-Origin', '*'));
-	// 	headerFields.push(new HeaderField('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS'));
-	// 	headerFields.push(new HeaderField('Access-Control-Allow-Headers', 'Content-Type'));
-	// 	headerFields.push(new HeaderField('Access-Control-Max-Age', '3600'));
-	// 	var head = new ResponseHeader(200, 'Found', headerFields);
-	// 	var res = new Response(head, "");
-	// 	return res;
-	// }
-
 	/*
 
-		// curl -i -X POST http://localhost:8080/projects/Reigns/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/start
-		// curl -i -X POST http://localhost:8080/projects/Reigns/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/stop
-
-	*/
-	@:post('/projects/$projectname/tasks/$taskid/start')
-	public function StartTask(projectname:String, taskid:String) {
-		trace("POST " + projectname);
+		// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/start
+		//
+	 */
+	//POST TASK START
+	@:post('/projects/$projectid/tasks/$taskid/start')
+	public function StartTask(projectid:String, taskid:String) {
+		trace('\nPOST:\nPROJECT: ${projectid}\nTASKSTART: $taskid');
 
 		this.m_allProjects = this.m_db.col(Project);
 		var _project:Project = null;
 
 		// trace(taskname);
 		for (index => p in this.m_allProjects) {
-			if (p.name == projectname) {
+			if (p.id == projectid) {
 				trace(index);
-				trace(projectname);
+				trace(projectid);
 				_project = this.m_allProjects[0];
 			}
 		}
@@ -131,26 +108,31 @@ class Root {
 		return res;
 	}
 
-	@:post('/projects/$projectname/tasks/$taskid/stop')
-	public function StopTask(projectname:String, taskid:String) {
-		trace("POST " + projectname);
+	//POST TASK STOP
+	/*
+	
+	// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/stop
+
+	*/
+	@:post('/projects/$projectid/tasks/$taskid/stop')
+	public function StopTask(projectid:String, taskid:String) {
+		trace('\nPOST:\nPROJECT: ${projectid}\nTASKSTOP: $taskid');
 
 		this.m_allProjects = this.m_db.col(Project);
 		var _project:Project = null;
 
 		// trace(taskname);
 		for (index => p in this.m_allProjects) {
-			if (p.name == projectname) {
+			if (p.id == projectid) {
 				trace(index);
-				trace(projectname);
+				trace(projectid);
 				_project = this.m_allProjects[0];
 			}
 		}
 
 		if (_project != null) {
 			trace(_project.name);
-			if (_project.StopTask(taskid)) 
-				{
+			if (_project.StopTask(taskid)) {
 				trace("Sucess start task");
 				this.m_db.save();
 			} else {
@@ -167,6 +149,55 @@ class Root {
 		} else {
 			head = new ResponseHeader(404, 'Not found', '');
 			body = "Not found";
+		}
+
+		var res = new Response(head, body);
+
+		return res;
+	}
+
+	//POST TASK CREATE
+	/*
+	
+	// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/NEWTASK
+
+	*/
+	@:post('/projects/$projectid/tasks/$taskname')
+	public function CreateTask(projectid:String, taskname:String) {
+		trace('\nPOST:\nPROJECT: ${projectid}\nTASKSCREATE: $taskname');
+
+		this.m_allProjects = this.m_db.col(Project);
+		var _project:Project = null;
+
+		var sucess:Bool = false;
+
+		// trace(taskname);
+		for (index => p in this.m_allProjects) {
+			if (p.id == projectid) {
+				trace(index);
+				trace(projectid);
+				_project = this.m_allProjects[0];
+			}
+		}
+
+		if (_project != null) {
+			trace(_project.name);
+			if (_project.addTask(new Task(taskname, HaxeLow.uuid(), _project.id))) 
+				{
+					sucess = true;
+					this.m_db.save();
+				}
+		}
+
+		var head:ResponseHeader;
+		var body:String;
+
+		if (sucess) {
+			head = new ResponseHeader(200, 'Found', '');
+			body = "Sucess";
+		} else {
+			head = new ResponseHeader(404, 'Not created', '');
+			body = "Not created";
 		}
 
 		var res = new Response(head, body);

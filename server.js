@@ -523,7 +523,9 @@ Project.prototype = {
 	,addTask: function(t) {
 		if(this.associatedTasks.indexOf(t) == -1) {
 			this.associatedTasks.push(t);
+			return true;
 		}
+		return false;
 	}
 	,StartTask: function(taskid) {
 		var _g = 0;
@@ -704,8 +706,8 @@ Root.prototype = {
 	m_db: null
 	,m_allCurrentTasks: null
 	,m_allProjects: null
-	,StartTask: function(projectname,taskid) {
-		haxe_Log.trace("POST " + projectname,{ fileName : "src/server/Server.hx", lineNumber : 94, className : "Root", methodName : "StartTask"});
+	,StartTask: function(projectid,taskid) {
+		haxe_Log.trace("\nPOST:\nPROJECT: " + projectid + "\nTASKSTART: " + taskid,{ fileName : "src/server/Server.hx", lineNumber : 95, className : "Root", methodName : "StartTask"});
 		this.m_allProjects = this.m_db.col(Project);
 		var _project = null;
 		var _g_current = 0;
@@ -715,19 +717,19 @@ Root.prototype = {
 			var _g1_key = _g_current++;
 			var index = _g1_key;
 			var p = _g1_value;
-			if(p.name == projectname) {
-				haxe_Log.trace(index,{ fileName : "src/server/Server.hx", lineNumber : 102, className : "Root", methodName : "StartTask"});
-				haxe_Log.trace(projectname,{ fileName : "src/server/Server.hx", lineNumber : 103, className : "Root", methodName : "StartTask"});
+			if(p.id == projectid) {
+				haxe_Log.trace(index,{ fileName : "src/server/Server.hx", lineNumber : 103, className : "Root", methodName : "StartTask"});
+				haxe_Log.trace(projectid,{ fileName : "src/server/Server.hx", lineNumber : 104, className : "Root", methodName : "StartTask"});
 				_project = this.m_allProjects[0];
 			}
 		}
 		if(_project != null) {
-			haxe_Log.trace(_project.name,{ fileName : "src/server/Server.hx", lineNumber : 109, className : "Root", methodName : "StartTask"});
+			haxe_Log.trace(_project.name,{ fileName : "src/server/Server.hx", lineNumber : 110, className : "Root", methodName : "StartTask"});
 			if(_project.StartTask(taskid)) {
-				haxe_Log.trace("Sucess start task",{ fileName : "src/server/Server.hx", lineNumber : 111, className : "Root", methodName : "StartTask"});
+				haxe_Log.trace("Sucess start task",{ fileName : "src/server/Server.hx", lineNumber : 112, className : "Root", methodName : "StartTask"});
 				this.m_db.save();
 			} else {
-				haxe_Log.trace("FAIL start task",{ fileName : "src/server/Server.hx", lineNumber : 114, className : "Root", methodName : "StartTask"});
+				haxe_Log.trace("FAIL start task",{ fileName : "src/server/Server.hx", lineNumber : 115, className : "Root", methodName : "StartTask"});
 			}
 		}
 		var head;
@@ -753,8 +755,8 @@ Root.prototype = {
 		var res = this1;
 		return res;
 	}
-	,StopTask: function(projectname,taskid) {
-		haxe_Log.trace("POST " + projectname,{ fileName : "src/server/Server.hx", lineNumber : 136, className : "Root", methodName : "StopTask"});
+	,StopTask: function(projectid,taskid) {
+		haxe_Log.trace("\nPOST:\nPROJECT: " + projectid + "\nTASKSTOP: " + taskid,{ fileName : "src/server/Server.hx", lineNumber : 138, className : "Root", methodName : "StopTask"});
 		this.m_allProjects = this.m_db.col(Project);
 		var _project = null;
 		var _g_current = 0;
@@ -764,19 +766,19 @@ Root.prototype = {
 			var _g1_key = _g_current++;
 			var index = _g1_key;
 			var p = _g1_value;
-			if(p.name == projectname) {
-				haxe_Log.trace(index,{ fileName : "src/server/Server.hx", lineNumber : 144, className : "Root", methodName : "StopTask"});
-				haxe_Log.trace(projectname,{ fileName : "src/server/Server.hx", lineNumber : 145, className : "Root", methodName : "StopTask"});
+			if(p.id == projectid) {
+				haxe_Log.trace(index,{ fileName : "src/server/Server.hx", lineNumber : 146, className : "Root", methodName : "StopTask"});
+				haxe_Log.trace(projectid,{ fileName : "src/server/Server.hx", lineNumber : 147, className : "Root", methodName : "StopTask"});
 				_project = this.m_allProjects[0];
 			}
 		}
 		if(_project != null) {
-			haxe_Log.trace(_project.name,{ fileName : "src/server/Server.hx", lineNumber : 151, className : "Root", methodName : "StopTask"});
+			haxe_Log.trace(_project.name,{ fileName : "src/server/Server.hx", lineNumber : 153, className : "Root", methodName : "StopTask"});
 			if(_project.StopTask(taskid)) {
-				haxe_Log.trace("Sucess start task",{ fileName : "src/server/Server.hx", lineNumber : 154, className : "Root", methodName : "StopTask"});
+				haxe_Log.trace("Sucess start task",{ fileName : "src/server/Server.hx", lineNumber : 155, className : "Root", methodName : "StopTask"});
 				this.m_db.save();
 			} else {
-				haxe_Log.trace("FAIL start task",{ fileName : "src/server/Server.hx", lineNumber : 157, className : "Root", methodName : "StopTask"});
+				haxe_Log.trace("FAIL start task",{ fileName : "src/server/Server.hx", lineNumber : 158, className : "Root", methodName : "StopTask"});
 			}
 		}
 		var head;
@@ -797,13 +799,61 @@ Root.prototype = {
 			var this1 = new tink_http_ResponseHeaderBase(404,"Not found",null,protocol);
 			head = this1;
 			body = "Not found";
+		}
+		var this1 = new tink_http_Message(head,body);
+		var res = this1;
+		return res;
+	}
+	,CreateTask: function(projectid,taskname) {
+		haxe_Log.trace("\nPOST:\nPROJECT: " + projectid + "\nTASKSCREATE: " + taskname,{ fileName : "src/server/Server.hx", lineNumber : 181, className : "Root", methodName : "CreateTask"});
+		this.m_allProjects = this.m_db.col(Project);
+		var _project = null;
+		var sucess = false;
+		var _g_current = 0;
+		var _g_array = this.m_allProjects;
+		while(_g_current < _g_array.length) {
+			var _g1_value = _g_array[_g_current];
+			var _g1_key = _g_current++;
+			var index = _g1_key;
+			var p = _g1_value;
+			if(p.id == projectid) {
+				haxe_Log.trace(index,{ fileName : "src/server/Server.hx", lineNumber : 191, className : "Root", methodName : "CreateTask"});
+				haxe_Log.trace(projectid,{ fileName : "src/server/Server.hx", lineNumber : 192, className : "Root", methodName : "CreateTask"});
+				_project = this.m_allProjects[0];
+			}
+		}
+		if(_project != null) {
+			haxe_Log.trace(_project.name,{ fileName : "src/server/Server.hx", lineNumber : 198, className : "Root", methodName : "CreateTask"});
+			if(_project.addTask(new Task(taskname,HaxeLow.uuid(),_project.id))) {
+				sucess = true;
+				this.m_db.save();
+			}
+		}
+		var head;
+		var body;
+		if(sucess) {
+			var protocol = "";
+			if(protocol == null) {
+				protocol = "HTTP/1.1";
+			}
+			var this1 = new tink_http_ResponseHeaderBase(200,"Found",null,protocol);
+			head = this1;
+			body = "Sucess";
+		} else {
+			var protocol = "";
+			if(protocol == null) {
+				protocol = "HTTP/1.1";
+			}
+			var this1 = new tink_http_ResponseHeaderBase(404,"Not created",null,protocol);
+			head = this1;
+			body = "Not created";
 		}
 		var this1 = new tink_http_Message(head,body);
 		var res = this1;
 		return res;
 	}
 	,GetAllProjects: function() {
-		haxe_Log.trace("All projects were required",{ fileName : "src/server/Server.hx", lineNumber : 179, className : "Root", methodName : "GetAllProjects"});
+		haxe_Log.trace("All projects were required",{ fileName : "src/server/Server.hx", lineNumber : 224, className : "Root", methodName : "GetAllProjects"});
 		var body = this.m_db.backup();
 		var protocol = "";
 		if(protocol == null) {
@@ -813,8 +863,8 @@ Root.prototype = {
 		var head = this1;
 		var this1 = new tink_http_Message(head,body);
 		var res = this1;
-		haxe_Log.trace(res.header,{ fileName : "src/server/Server.hx", lineNumber : 186, className : "Root", methodName : "GetAllProjects"});
-		haxe_Log.trace(res.body,{ fileName : "src/server/Server.hx", lineNumber : 187, className : "Root", methodName : "GetAllProjects"});
+		haxe_Log.trace(res.header,{ fileName : "src/server/Server.hx", lineNumber : 231, className : "Root", methodName : "GetAllProjects"});
+		haxe_Log.trace(res.body,{ fileName : "src/server/Server.hx", lineNumber : 232, className : "Root", methodName : "GetAllProjects"});
 		return res;
 	}
 	,OptionsAllProjects: function() {
@@ -1010,18 +1060,22 @@ StringTools.hex = function(n,digits) {
 	}
 	return s;
 };
-var Task = function(name,id) {
+var Task = function(name,id,projectid) {
 	this.name = name;
 	this.id = id;
+	this.projectid = projectid;
 	this.totalDuration = 0;
 	this.setStarts = [];
 	this.setStops = [];
+	this.timeOfCreation = HxOverrides.dateStr(new Date());
 };
 $hxClasses["Task"] = Task;
 Task.__name__ = "Task";
 Task.prototype = {
 	name: null
 	,id: null
+	,projectid: null
+	,timeOfCreation: null
 	,totalDuration: null
 	,setStarts: null
 	,setStops: null
@@ -49765,18 +49819,19 @@ tink_web_routing_Router0.prototype = {
 							if(_g4 == true) {
 								if(_g3 == true) {
 									if(_g2 == true) {
-										if(_g1 == true) {
+										if(_g1) {
 											if(_g == false) {
-												var projectname = _g9;
+												var projectid = _g9;
 												var taskid = _g7;
-												return tink_core_Promise.ofSpecific(this.StartTask(ctx,projectname,taskid));
+												return tink_core_Promise.ofSpecific(this.StartTask(ctx,projectid,taskid));
 											} else {
 												var this1 = ctx.request.header.url;
 												return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
 											}
 										} else {
-											var this1 = ctx.request.header.url;
-											return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
+											var taskname = _g7;
+											var projectid = _g9;
+											return tink_core_Promise.ofSpecific(this.CreateTask(ctx,projectid,taskname));
 										}
 									} else {
 										var this1 = ctx.request.header.url;
@@ -49800,15 +49855,46 @@ tink_web_routing_Router0.prototype = {
 							if(_g4 == true) {
 								if(_g3 == true) {
 									if(_g2 == true) {
-										if(_g1 == true) {
+										if(_g1) {
 											if(_g == false) {
-												var projectname = _g9;
+												var projectid = _g9;
 												var taskid = _g7;
-												return tink_core_Promise.ofSpecific(this.StopTask(ctx,projectname,taskid));
+												return tink_core_Promise.ofSpecific(this.StopTask(ctx,projectid,taskid));
 											} else {
 												var this1 = ctx.request.header.url;
 												return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
 											}
+										} else {
+											var taskname = _g7;
+											var projectid = _g9;
+											return tink_core_Promise.ofSpecific(this.CreateTask(ctx,projectid,taskname));
+										}
+									} else {
+										var this1 = ctx.request.header.url;
+										return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
+									}
+								} else {
+									var this1 = ctx.request.header.url;
+									return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
+								}
+							} else {
+								var this1 = ctx.request.header.url;
+								return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
+							}
+						} else {
+							var this1 = ctx.request.header.url;
+							return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
+						}
+						break;
+					default:
+						if(_g5 == true) {
+							if(_g4 == true) {
+								if(_g3 == true) {
+									if(_g2 == true) {
+										if(_g1 == false) {
+											var taskname = _g7;
+											var projectid = _g9;
+											return tink_core_Promise.ofSpecific(this.CreateTask(ctx,projectid,taskname));
 										} else {
 											var this1 = ctx.request.header.url;
 											return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
@@ -49829,10 +49915,6 @@ tink_web_routing_Router0.prototype = {
 							var this1 = ctx.request.header.url;
 							return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
 						}
-						break;
-					default:
-						var this1 = ctx.request.header.url;
-						return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
 					}
 				} else {
 					var this1 = ctx.request.header.url;
@@ -49848,10 +49930,10 @@ tink_web_routing_Router0.prototype = {
 			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(404,"Not Found: [" + ctx.request.header.method + "] " + (this1.query == null ? this1.path : (this1.path == null ? "null" : this1.path) + "?" + (this1.query == null ? "null" : this1.query)),{ fileName : "src/server/Server.hx", lineNumber : 18, className : "tink.web.routing.Router0", methodName : "route"}))));
 		}
 	}
-	,StartTask: function(ctx,projectname,taskid) {
+	,StartTask: function(ctx,projectid,taskid) {
 		var d = this.target;
 		var d1;
-		var _g = tink_Stringly.parse(projectname,function(s) {
+		var _g = tink_Stringly.parse(projectid,function(s) {
 			return s;
 		});
 		switch(_g._hx_index) {
@@ -49881,13 +49963,13 @@ tink_web_routing_Router0.prototype = {
 				var this1 = new tink_http__$Response_OutgoingResponseData(__data__.header.concat([new tink_http_HeaderField("content-type","application/json")]),new tink_streams_Single(new tink_core__$Lazy_LazyConst(tink_chunk_ByteChunk.of(haxe_io_Bytes.ofString(new tink_json_Writer0().write(__data__.body))))));
 				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(this1)));
 			}
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 93, className : "tink.web.routing.Router0", methodName : "StartTask"}))));
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 94, className : "tink.web.routing.Router0", methodName : "StartTask"}))));
 		});
 	}
-	,StopTask: function(ctx,projectname,taskid) {
+	,StopTask: function(ctx,projectid,taskid) {
 		var d = this.target;
 		var d1;
-		var _g = tink_Stringly.parse(projectname,function(s) {
+		var _g = tink_Stringly.parse(projectid,function(s) {
 			return s;
 		});
 		switch(_g._hx_index) {
@@ -49917,7 +49999,43 @@ tink_web_routing_Router0.prototype = {
 				var this1 = new tink_http__$Response_OutgoingResponseData(__data__.header.concat([new tink_http_HeaderField("content-type","application/json")]),new tink_streams_Single(new tink_core__$Lazy_LazyConst(tink_chunk_ByteChunk.of(haxe_io_Bytes.ofString(new tink_json_Writer0().write(__data__.body))))));
 				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(this1)));
 			}
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 135, className : "tink.web.routing.Router0", methodName : "StopTask"}))));
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 137, className : "tink.web.routing.Router0", methodName : "StopTask"}))));
+		});
+	}
+	,CreateTask: function(ctx,projectid,taskname) {
+		var d = this.target;
+		var d1;
+		var _g = tink_Stringly.parse(projectid,function(s) {
+			return s;
+		});
+		switch(_g._hx_index) {
+		case 0:
+			var v = _g.data;
+			d1 = v;
+			break;
+		case 1:
+			var e = _g.failure;
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(e)));
+		}
+		var _g = tink_Stringly.parse(taskname,function(s) {
+			return s;
+		});
+		var d2;
+		switch(_g._hx_index) {
+		case 0:
+			var v = _g.data;
+			d2 = v;
+			break;
+		case 1:
+			var e = _g.failure;
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(e)));
+		}
+		return tink_core_Promise.next(new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(d.CreateTask(d1,d2)))),function(__data__) {
+			if(ctx.accepts("application/json")) {
+				var this1 = new tink_http__$Response_OutgoingResponseData(__data__.header.concat([new tink_http_HeaderField("content-type","application/json")]),new tink_streams_Single(new tink_core__$Lazy_LazyConst(tink_chunk_ByteChunk.of(haxe_io_Bytes.ofString(new tink_json_Writer0().write(__data__.body))))));
+				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(this1)));
+			}
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 180, className : "tink.web.routing.Router0", methodName : "CreateTask"}))));
 		});
 	}
 	,GetAllProjects: function(ctx) {
@@ -49926,7 +50044,7 @@ tink_web_routing_Router0.prototype = {
 				var this1 = new tink_http__$Response_OutgoingResponseData(__data__.header.concat([new tink_http_HeaderField("content-type","application/json")]),new tink_streams_Single(new tink_core__$Lazy_LazyConst(tink_chunk_ByteChunk.of(haxe_io_Bytes.ofString(new tink_json_Writer0().write(__data__.body))))));
 				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(this1)));
 			}
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 178, className : "tink.web.routing.Router0", methodName : "GetAllProjects"}))));
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 223, className : "tink.web.routing.Router0", methodName : "GetAllProjects"}))));
 		});
 	}
 	,OptionsAllProjects: function(ctx) {
@@ -49935,7 +50053,7 @@ tink_web_routing_Router0.prototype = {
 				var this1 = new tink_http__$Response_OutgoingResponseData(__data__.header.concat([new tink_http_HeaderField("content-type","application/json")]),new tink_streams_Single(new tink_core__$Lazy_LazyConst(tink_chunk_ByteChunk.of(haxe_io_Bytes.ofString(new tink_json_Writer0().write(__data__.body))))));
 				return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(this1)));
 			}
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 193, className : "tink.web.routing.Router0", methodName : "OptionsAllProjects"}))));
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(415,"Unsupported Media Type",{ fileName : "src/server/Server.hx", lineNumber : 238, className : "tink.web.routing.Router0", methodName : "OptionsAllProjects"}))));
 		});
 	}
 	,__class__: tink_web_routing_Router0

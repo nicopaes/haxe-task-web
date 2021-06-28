@@ -7,16 +7,32 @@
             ,"totalSumSeconds" : 0
             ,"timeOfCreation" : "2021-05-06 01:04:52"
             ,"associatedTasks" : [
-                 {
+                {
                      "_hxcls" : "Task"
-                    ,"name" : "This mf task"
-                    ,"id" : "3fd98ce4-beb5-4085-b273-d101fee81d96"
+                    ,"name" : "FixServer"
+                    ,"id" : "54e2ca51-5cd2-4e03-9372-dc0e55923e72"
+                    ,"projectid" : "3fd98ce3-3ce4-4136-84fc-de4caf27179d"
+                    ,"timeOfCreation" : "2021-06-28 20:09:46"
                     ,"totalDuration" : 0
                     ,"setStarts" : [
-                         "2021-06-28 19:27:11"
+
                     ]
                     ,"setStops" : [
-                         "2021-06-28 19:32:10"
+
+                    ]
+                }
+                ,{
+                     "_hxcls" : "Task"
+                    ,"name" : "NEWTASK"
+                    ,"id" : "54e7138b-2ccc-4379-8301-e7b40e155c11"
+                    ,"projectid" : "3fd98ce3-3ce4-4136-84fc-de4caf27179d"
+                    ,"timeOfCreation" : "2021-06-28 20:14:27"
+                    ,"totalDuration" : 0
+                    ,"setStarts" : [
+
+                    ]
+                    ,"setStops" : [
+
                     ]
                 }
             ]
