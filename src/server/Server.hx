@@ -1,3 +1,4 @@
+import sys.ssl.Key;
 import tink.web.Response;
 import haxe.Json;
 import js.node.Require;
@@ -10,9 +11,9 @@ import tjson.TJSON;
 
 class Server {
 	static function main() {
-		//var port = Node.process.env.get("PORT");
-		//trace(port);
-		//process.env.PORT || 
+		// var port = Node.process.env.get("PORT");
+		// trace(port);
+		// $NodeContainer_ServerKindBase.Port(process.env.PORT ||
 		var container = new NodeContainer(8080);
 		var router = new Router<Root>(new Root());
 		container.run(function(req) {
@@ -26,7 +27,7 @@ class Root {
 	public function new() {
 		this.m_db = new HaxeLow('dbt.json');
 
-		//this.m_allCurrentTasks = this.m_db.col(Task);
+		// this.m_allCurrentTasks = this.m_db.col(Task);
 		this.m_allProjects = this.m_db.col(Project);
 
 		// var p = new Project("Reigns",HaxeLow.uuid());
@@ -41,7 +42,7 @@ class Root {
 		// trace(p.associatedTasks.length);
 		// trace(p.timeOfCreation);
 
-		//m_allProjects.push(p);
+		// m_allProjects.push(p);
 		trace(m_allProjects[0].name);
 		trace(m_allProjects[0].associatedTasks.length);
 
@@ -49,7 +50,6 @@ class Root {
 		// m_allCurrentTasks.push(t2);
 		// m_allCurrentTasks.push(t3);
 
-		
 		// trace(m_allCurrentTasks[1].name);
 		// trace(m_allCurrentTasks[2].name);
 
@@ -65,37 +65,122 @@ class Root {
 	// 	// trace("All tasks were required");
 	// 	//var body = TJSON.encode(this.m_allCurrentTasks);
 	// 	var body = Json.stringify(this.m_allCurrentTasks);
-		
 	// 	var head = new ResponseHeader(200, 'Found', '');
 	// 	var res = new Response(head, body);
 	// 	trace(res.header);
 	// 	trace(res.body);
-
 	// 	return res;
 	// }
-
 	// @:options('/tasks/get')
 	// public function OptionsAllTasks() {
-
 	// 	var headerFields:Array<HeaderField> = new Array<HeaderField>();
 	// 	headerFields.push(new HeaderField('Access-Control-Allow-Origin', '*'));
 	// 	headerFields.push(new HeaderField('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS'));
 	// 	headerFields.push(new HeaderField('Access-Control-Allow-Headers', 'Content-Type'));
 	// 	headerFields.push(new HeaderField('Access-Control-Max-Age', '3600'));
-
 	// 	var head = new ResponseHeader(200, 'Found', headerFields);
-
 	// 	var res = new Response(head, "");
 	// 	return res;
 	// }
 
+	/*
+
+		// curl -i -X POST http://localhost:8080/projects/Reigns/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/start
+		// curl -i -X POST http://localhost:8080/projects/Reigns/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/stop
+
+	*/
+	@:post('/projects/$projectname/tasks/$taskid/start')
+	public function StartTask(projectname:String, taskid:String) {
+		trace("POST " + projectname);
+
+		this.m_allProjects = this.m_db.col(Project);
+		var _project:Project = null;
+
+		// trace(taskname);
+		for (index => p in this.m_allProjects) {
+			if (p.name == projectname) {
+				trace(index);
+				trace(projectname);
+				_project = this.m_allProjects[0];
+			}
+		}
+
+		if (_project != null) {
+			trace(_project.name);
+			if (_project.StartTask(taskid)) {
+				trace("Sucess start task");
+				this.m_db.save();
+			} else {
+				trace("FAIL start task");
+			}
+		}
+
+		var head:ResponseHeader;
+		var body:String;
+
+		if (_project != null) {
+			head = new ResponseHeader(200, 'Found', '');
+			body = "Sucess";
+		} else {
+			head = new ResponseHeader(404, 'Not found', '');
+			body = "Not found";
+		}
+
+		var res = new Response(head, body);
+
+		return res;
+	}
+
+	@:post('/projects/$projectname/tasks/$taskid/stop')
+	public function StopTask(projectname:String, taskid:String) {
+		trace("POST " + projectname);
+
+		this.m_allProjects = this.m_db.col(Project);
+		var _project:Project = null;
+
+		// trace(taskname);
+		for (index => p in this.m_allProjects) {
+			if (p.name == projectname) {
+				trace(index);
+				trace(projectname);
+				_project = this.m_allProjects[0];
+			}
+		}
+
+		if (_project != null) {
+			trace(_project.name);
+			if (_project.StopTask(taskid)) 
+				{
+				trace("Sucess start task");
+				this.m_db.save();
+			} else {
+				trace("FAIL start task");
+			}
+		}
+
+		var head:ResponseHeader;
+		var body:String;
+
+		if (_project != null) {
+			head = new ResponseHeader(200, 'Found', '');
+			body = "Sucess";
+		} else {
+			head = new ResponseHeader(404, 'Not found', '');
+			body = "Not found";
+		}
+
+		var res = new Response(head, body);
+
+		return res;
+	}
+
 	@:get('/projects/get')
 	public function GetAllProjects() {
 		trace("All projects were required");
-		//var body = TJSON.encode(m_allProjects,'fancy');
-		//var body = Json.stringify(m_db.backup());
+		// var body = TJSON.encode(m_allProjects,'fancy');
+		// var body = Json.stringify(m_db.backup());
 		var body = m_db.backup();
-		
+
 		var head = new ResponseHeader(200, 'Found', '');
 		var res = new Response(head, body);
 		trace(res.header);
@@ -106,7 +191,6 @@ class Root {
 
 	@:options('/projects/get')
 	public function OptionsAllProjects() {
-
 		var headerFields:Array<HeaderField> = new Array<HeaderField>();
 		headerFields.push(new HeaderField('Access-Control-Allow-Origin', '*'));
 		headerFields.push(new HeaderField('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS'));

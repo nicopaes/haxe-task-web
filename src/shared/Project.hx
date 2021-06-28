@@ -21,4 +21,30 @@ class Project {
                     associatedTasks.push(t);
                 }
         }
+    
+    public function StartTask(taskid:String) : Bool 
+    {
+        for(t in this.associatedTasks)
+            {
+                if(t.id == taskid)
+                    {
+                        t.addStart(Date.now().toString());
+                        return true;
+                    }
+            }  
+            return false;  
+    }
+
+    public function StopTask(taskid:String) : Bool 
+        {
+            for(t in this.associatedTasks)
+                {
+                    if(t.id == taskid)
+                        {
+                            t.addStop(Date.now().toString());
+                            return true;
+                        }
+                }  
+                return false;  
+        }
 }
