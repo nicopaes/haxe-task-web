@@ -170,6 +170,7 @@ class Root {
 		var _project:Project = null;
 
 		var sucess:Bool = false;
+		var newTask:Task = null;
 
 		// trace(taskname);
 		for (index => p in this.m_allProjects) {
@@ -182,7 +183,8 @@ class Root {
 
 		if (_project != null) {
 			trace(_project.name);
-			if (_project.addTask(new Task(taskname, HaxeLow.uuid(), _project.id))) 
+			newTask = new Task(taskname, HaxeLow.uuid(), _project.id);
+			if (_project.addTask(newTask)) 
 				{
 					sucess = true;
 					this.m_db.save();
@@ -194,7 +196,8 @@ class Root {
 
 		if (sucess) {
 			head = new ResponseHeader(200, 'Found', '');
-			body = "Sucess";
+			body = Json.stringify(newTask);
+			trace(body);
 		} else {
 			head = new ResponseHeader(404, 'Not created', '');
 			body = "Not created";
