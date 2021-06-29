@@ -51,6 +51,43 @@
 
                     ]
                 }
+                ,{
+                     "_hxcls" : "Task"
+                    ,"name" : "NEWTASK"
+                    ,"id" : "554e925f-a3fe-46ed-a5b2-71d46ee440b7"
+                    ,"projectid" : "3fd98ce3-3ce4-4136-84fc-de4caf27179d"
+                    ,"timeOfCreation" : "2021-06-28 22:07:30"
+                    ,"totalDuration" : 0
+                    ,"setStarts" : [
+
+                    ]
+                    ,"setStops" : [
+
+                    ]
+                }
+            ]
+        }
+        ,{
+             "_hxcls" : "Project"
+            ,"name" : "Nicolas Proj"
+            ,"id" : "553ea1af-90aa-4e6f-8663-9085bca79cbd"
+            ,"totalSumSeconds" : 0
+            ,"timeOfCreation" : "2021-06-29 00:50:05"
+            ,"associatedTasks" : [
+                 {
+                     "_hxcls" : "Task"
+                    ,"name" : "Nicolas Task "
+                    ,"id" : "554e21ce-a272-4585-9044-f754448819ce"
+                    ,"projectid" : "553ea1af-90aa-4e6f-8663-9085bca79cbd"
+                    ,"timeOfCreation" : "2021-06-28 22:07:01"
+                    ,"totalDuration" : 0
+                    ,"setStarts" : [
+
+                    ]
+                    ,"setStops" : [
+
+                    ]
+                }
             ]
         }
     ]
