@@ -205,6 +205,45 @@ class Root {
 		return res;
 	}
 
+	//POST PROJECT CREATE
+	/*
+	
+	// curl -i -X POST http://localhost:8080/projects/NEWPROJECT
+
+	*/
+	@:post('/projects/$projectname')
+	public function CreateProject(projectname:String) {
+		trace('\nPOST:\nPROJECT CREATE: $projectname');
+
+		this.m_allProjects = this.m_db.col(Project);
+		var sucess:Bool = false;
+		var countBefore:Int = this.m_allProjects.length;
+		
+		this.m_allProjects.push(new Project(projectname, HaxeLow.uuid()));
+		var countAfter:Int = this.m_allProjects.length;
+
+		sucess = countBefore < countAfter;
+		if(sucess)
+		{
+			this.m_db.save();
+		}
+
+		var head:ResponseHeader;
+		var body:String;
+
+		if (sucess) {
+			head = new ResponseHeader(200, 'Created', '');
+			body = "Sucess";
+		} else {
+			head = new ResponseHeader(404, 'Not created', '');
+			body = "Not created";
+		}
+
+		var res = new Response(head, body);
+
+		return res;
+	}
+
 	@:get('/projects/get')
 	public function GetAllProjects() {
 		trace("All projects were required");
