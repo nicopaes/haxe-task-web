@@ -43,8 +43,9 @@ class Root {
 		// trace(p.timeOfCreation);
 
 		// m_allProjects.push(p);
-		trace(m_allProjects[0].name);
-		trace(m_allProjects[0].associatedTasks.length);
+		for (index => p in m_allProjects) {
+			trace('$index => ${p.name} => Tasks: ${p.associatedTasks.length}');
+		}
 
 		// m_allCurrentTasks.push(t);
 		// m_allCurrentTasks.push(t2);
@@ -65,7 +66,8 @@ class Root {
 		// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/start
 		//
 	 */
-	//POST TASK START
+	// POST TASK START
+
 	@:post('/projects/$projectid/tasks/$taskid/start')
 	public function StartTask(projectid:String, taskid:String) {
 		trace('\nPOST:\nPROJECT: ${projectid}\nTASKSTART: $taskid');
@@ -78,7 +80,7 @@ class Root {
 			if (p.id == projectid) {
 				trace(index);
 				trace(projectid);
-				_project = this.m_allProjects[0];
+				_project = this.m_allProjects[index];
 			}
 		}
 
@@ -108,12 +110,13 @@ class Root {
 		return res;
 	}
 
-	//POST TASK STOP
-	/*
-	
-	// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/stop
+	// POST TASK STOP
 
-	*/
+	/*
+
+		// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/3fd98ce4-beb5-4085-b273-d101fee81d96/stop
+
+	 */
 	@:post('/projects/$projectid/tasks/$taskid/stop')
 	public function StopTask(projectid:String, taskid:String) {
 		trace('\nPOST:\nPROJECT: ${projectid}\nTASKSTOP: $taskid');
@@ -126,7 +129,7 @@ class Root {
 			if (p.id == projectid) {
 				trace(index);
 				trace(projectid);
-				_project = this.m_allProjects[0];
+				_project = this.m_allProjects[index];
 			}
 		}
 
@@ -156,12 +159,14 @@ class Root {
 		return res;
 	}
 
-	//POST TASK CREATE
-	/*
-	
-	// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/NEWTASK
+	// POST TASK CREATE
 
-	*/
+	/*
+
+		// curl -i -X POST http://localhost:8080/projects/3fd98ce3-3ce4-4136-84fc-de4caf27179d/tasks/NEWTASK
+		// curl -i -X POST http://localhost:8080/projects/553ea1af-90aa-4e6f-8663-9085bca79cbd/tasks/Nicolas%20Task%20
+
+	 */
 	@:post('/projects/$projectid/tasks/$taskname')
 	public function CreateTask(projectid:String, taskname:String) {
 		trace('\nPOST:\nPROJECT: ${projectid}\nTASKSCREATE: $taskname');
@@ -177,18 +182,17 @@ class Root {
 			if (p.id == projectid) {
 				trace(index);
 				trace(projectid);
-				_project = this.m_allProjects[0];
+				_project = this.m_allProjects[index];
 			}
 		}
 
 		if (_project != null) {
 			trace(_project.name);
 			newTask = new Task(taskname, HaxeLow.uuid(), _project.id);
-			if (_project.addTask(newTask)) 
-				{
-					sucess = true;
-					this.m_db.save();
-				}
+			if (_project.addTask(newTask)) {
+				sucess = true;
+				this.m_db.save();
+			}
 		}
 
 		var head:ResponseHeader;
@@ -208,12 +212,13 @@ class Root {
 		return res;
 	}
 
-	//POST PROJECT CREATE
-	/*
-	
-	// curl -i -X POST http://localhost:8080/projects/NEWPROJECT
+	// POST PROJECT CREATE
 
-	*/
+	/*
+
+		// curl -i -X POST http://localhost:8080/projects/NEWPROJECT
+
+	 */
 	@:post('/projects/$projectname')
 	public function CreateProject(projectname:String) {
 		trace('\nPOST:\nPROJECT CREATE: $projectname');
@@ -221,13 +226,12 @@ class Root {
 		this.m_allProjects = this.m_db.col(Project);
 		var sucess:Bool = false;
 		var countBefore:Int = this.m_allProjects.length;
-		
+
 		this.m_allProjects.push(new Project(projectname, HaxeLow.uuid()));
 		var countAfter:Int = this.m_allProjects.length;
 
 		sucess = countBefore < countAfter;
-		if(sucess)
-		{
+		if (sucess) {
 			this.m_db.save();
 		}
 
